@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ランダムチャット</title>
+    <link rel="stylesheet" type="text/css" href="/font-awesome-4.7.0/css/font-awesome.css">
+    <!-- <link rel="stylesheet" type="text/css" href="./animate.css"> -->
+    <link rel="stylesheet" type="text/css" href="/css/stylerandomchat.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../skippr_hina/css/skippr.css">
+    <link rel="stylesheet" type="text/css" href="../skippr_hina/css/style.css"> -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto" >
+</head>
+<body>
+<div class="wrap">
+    <header class="clearfix">
+        <div class="nav">
+            <div class="logo">
+                <p class="Top"><a href="/">Galledia de Chat</a></p>
+            </div>
+            <ul class="top-menu">
+                <li class="top-menu-item"><a href="#login">ログイン</a></li>
+                <li class="top-menu-item"><a href="#login">会員登録</a></li>
+            </ul>
+        </div>
+    </header>
+</div>
+
+<div class="clearfix">
+    <div class="attention">
+        <h2 class="hajime">チャットを始める前に</h2>
+
+        <p class="description">
+            ・一期一会の会話が楽しめる紳士淑女（年齢に関わらず）のためのサービスです。<br>
+            ・出会い系ではありません。<br>
+            ・自身の快楽のみを追求したパワハラ・セクハラ等の一方的な発言は強く禁止します。<br>
+            ・会話の公開/非公開を選んでください。<br>
+            （デフォルトは非公開です。）<br>
+            ・皆にも共有したい、良いフレーズが出たら、「よっ！名言！」ボタンを押してください。<br>
+            会話を非公開にしていても、名言はサイトのトップページに公開されます。<br>
+            ・退出のときには退出ボタンを押してください。最後の一人になったらチャットは終了します。<br>
+            ・すごく仲良くなってどうしてもまた話したくなったら、<br>
+            会員登録をして、会員向けのメッセンジャーサービスを使ってください。<br>
+        </p>
+
+        <div class="chatstart">ランダムチャットを開始する
+            <!--<div class="chatstart-after">GO!</div>-->
+            <a href="/chat/random" class="chatstart-after">GO!</a>
+        </div>
+
+    </div>
+
+    <div class="chatimage">
+        <h1 class="top1">ランダムチャット</h1>
+        <p  class="top2">・一期一会の会話が楽しめる紳士淑女（年齢に関わらず）のためのサービスです。<br>
+            ・出会い系ではありません。<br>
+            ・自身の快楽のみを追求したパワハラ・セクハラ等の一方的な発言は強く禁止します。<br>
+            ・会話の公開/非公開を選んでください。<br>
+            （デフォルトは非公開です。）<br>
+            ・皆にも共有したい、良いフレーズが出たら、「よっ！名言！」ボタンを押してください。<br>
+            会話を非公開にしていても、名言はサイトのトップページに公開されます。<br>
+            ・退出のときには退出ボタンを押してください。最後の一人になったらチャットは終了します。<br>
+            ・すごく仲良くなってどうしてもまた話したくなったら、<br>
+            会員登録をして、会員向けのメッセンジャーサービスを使ってください。<br>
+        </p>
+    </div>
+</div>
+<footer class="footer">
+    <small>@2017 WillTREE</small>
+</footer>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<!-- <script src="../js/wow.js"></script> -->
+<script>
+    $('.chatstart').hover(function(){
+        $('.chatstart-after').stop().fadeToggle();
+    });
+</script>
+
+</body>
+</html>

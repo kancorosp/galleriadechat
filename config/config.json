@@ -1,0 +1,10 @@
+{
+    "sessionSecret": "A12sI9sb3sdf54sea3aDB6oiv",
+    "redis": {
+        "host": "127.0.0.1",
+        "port": 6379,
+        "password": ""
+    },
+    "room_user": 3,
+    "maxWittyMessages": 100
+}

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>とにかく話を聞いてあげたい</title>
+    <link rel="stylesheet" type="text/css" href="/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="/css/chat.css">
+    <link rel="stylesheet" type="text/css" href="/css/stylerandomchat.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" >
+    <style>
+        label, input { display:block; }
+        input.text { margin-bottom:12px; width:95%; padding: .4em; }
+        fieldset { padding:0; border:0; margin-top:25px; }
+        .ui-dialog .ui-state-error { padding: .3em; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header class="clearfix">
+        <div class="nav">
+            <div class="logo">
+                <p class="Top"><a href="/">Galledia de Chat</a></p>
+            </div>
+            <ul class="top-menu">
+                <li class="top-menu-item"><a href="#login">ログイン</a></li>
+                <li class="top-menu-item"><a href="#login">会員登録</a></li>
+            </ul>
+        </div>
+    </header>
+</div>
+<div class="clearfix"></div>
+<div class="container clearfix">
+    <div class="chat-container">
+        <div class="chat">
+            <div class="chat-header clearfix">
+                メッセージ
+                <i class="fa fa-users"></i>
+            </div>
+
+            <div class="chat-history">
+                <ul>
+                </ul>
+            </div> <!-- end chat-history -->
+
+            <div class="chat-message clearfix">
+                <textarea name="message" id="message_content" placeholder ="Type your message" rows="1"></textarea>
+                <button type="submit" id="message_send">送信</button>
+            </div> <!-- end chat-message -->
+        </div> <!-- end chat -->
+
+        <div class="controls">
+            <div class="room-name" style="height: 30px; color: white">
+                <span>とにかく話を聞いてあげたい</span>
+            </div>
+            <div>
+                <button class="public-btn" style="float:left;" data-value="1">公開</button>
+                <button class="escape-btn" style="background-color: #EC715F">退出</button>
+            </div>
+        </div>
+
+
+        <div class="users-list">
+            <ul class="list">
+
+            </ul>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+    <small>@2017 WillTREE</small>
+</footer>
+
+<div id="dialog-form" title="ニックネーム入力">
+    <!--<p class="validateTips">ニックネームを入力してください</p>-->
+    <form>
+        <fieldset>
+            <label for="name">ニックネーム</label>
+            <input type="text" name="user_name" id="user_name" placeholder="User" class="text ui-widget-content ui-corner-all">
+            <!-- Allow form submission with keyboard without duplicating the dialog button -->
+            <input type="submit" id="join" tabindex="-1" style="position:absolute; top:-1000px">
+        </fieldset>
+    </form>
+</div>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery-ui.js"></script>
+    <script src="/js/socket.io.js"></script>
+    <script src="/js/common.js"></script>
+    <script>
+        var dialog = $( "#dialog-form" ).dialog({
+            autoOpen: false,
+            height: 400,
+            width: 350,
+            modal: true,
+            buttons: {
+                "チャット開始": joinChat,
+    //                Cancel: function() {
+    //                    dialog.dialog( "close" );
+    //                }
+            },
+            close: function() {
+                form[ 0 ].reset();
+            }
+        });
+
+        var form = dialog.find( "form" ).on( "submit", function( event ) {
+            event.preventDefault();
+        });
+
+        var colorList = ["color-1", "color-2", "color-3"];
+        var userColors = {};
+        var userId = '';  // User ID
+
+        //========== SOCKET ============
+        // Setup ajax
+        $.ajaxSetup({
+            dataType: 'json',
+            xhrFields: {
+                withCredentials: true
+            }
+        });
+
+        //var socket = io.connect('http://localhost:3000');
+        var socket = io('/anything_talk', {transports: ['websocket']});
+        socket.on('connect', function (data) {
+            //socket.emit('join', 'Join random room chat');
+        });
+
+        socket.on('joinRoomSuccess', function (roomId, userName, uId) {
+            userId = uId;
+            // Call API to update session
+            $.post('/chat/join_room', {
+                'roomId': roomId,
+                'userName': userName
+            });
+
+            addNotice(userName + " が入室しました。");
+        });
+
+        socket.on('broad', function (data) {
+            //$('#future').append(data + "<br/>");
+            addMessage(data);
+        });
+
+        socket.on('init', function (data) {
+            dialog.dialog( "open" );
+        });
+
+        socket.on('errorMessage', function (data) {
+            alert('3人のメンバーが集まるまで、もう少々お待ちください。');
+        });
+
+        socket.on('removeRoom', function (data) {
+            alert('ルームが解散します');
+            window.location.href = '/';
+        });
+
+        socket.on('removeUser', function (data) {
+            $('#user-' + data.userId).remove();
+            addNotice(data.userName + " が退出しました。");
+        });
+
+        // Get notice from server and display
+        socket.on('addNotice', function (notice) {
+            // Add notice
+            addNotice(notice);
+        });
+
+        // Update users list upon emitting updateUsersList event
+        socket.on('updateUsersList', function(data, clear) {
+            var users = data.users;
+            var historyMesssages = data.histories;
+            var $publicBtn = $('.public-btn');
+
+            // Public room
+            if(data.open){
+                $publicBtn.data('value', 1);
+                $publicBtn.text('公開');
+                // Private room
+            }else{
+                $publicBtn.data('value', 0);
+                $publicBtn.text('非公開');
+            }
+
+            // Update user list
+            $('.container p.message').remove();
+            if(users.error != null){
+                $('.container').html(`<p class="message error">${users.error}</p>`);
+            }else{
+                updateUsersList(users, clear);
+
+                if(historyMesssages && historyMesssages.length){
+                    console.log(historyMesssages);
+                    historyMesssages.forEach(function (message) {
+                        addMessage(message);
+                    })
+                }
+            }
+        });
+
+        // User request join chat
+        function joinChat() {
+            var userName = $('#user_name').val()
+            socket.emit('join', userName);
+            dialog.dialog( "close" );
+        }
+
+        // Add message
+        function addMessage(message) {
+            message.date      = (new Date(message.date)).toLocaleString();
+            message.username  = encodeHTML(message.username);
+            message.content   = addBreakLine(message.content);
+
+            var html = `
+                  <li class="${userColors[message.userId]}">
+                    <div class="message-data">
+                      <span class="message-data-name">${message.username}</span>
+                      <span class="message-data-time">${message.date}</span>
+                      <span class="pull-right"><span class="small-text">よっ名言!</span><i class="fa fa-lg fa-thumbs-up like-icon"></i></span>
+                    </div>
+                    <span class="message my-message ${userColors[message.userId]}" dir="auto">${message.content}</span>
+                  </li>`;
+            $(html).hide().appendTo('.chat-history ul').slideDown(200);
+
+            // Keep scroll bar down
+            $(".chat-history").animate({ scrollTop: $('.chat-history')[0].scrollHeight}, 1000);
+        }
+
+        // Add notice to chat history
+        function addNotice(content) {
+            var html = `<li><div><span class="chat-notice">${content}</span></div></li>`;
+            $(html).hide().appendTo('.chat-history ul').slideDown(200);
+        }
+
+        // Update users list
+        function updateUsersList(users, clear) {
+            var html = '';
+            for(var uId in users) {
+                var userName = '';
+                if (users.hasOwnProperty(uId)) {
+                    userName = users[uId];
+                }
+
+                // Set color for each user
+                if(!userColors.hasOwnProperty(uId)) {
+                    for(var j=0; j < 3; j++){
+                        if( Object.values(userColors).indexOf(colorList[j]) == -1){
+                            userColors[uId] = colorList[j];
+                            break;
+                        }
+                    }
+                }
+
+                userName = this.encodeHTML(userName);
+                html += `
+                     <li class="clearfix" id="user-${uId}">
+                         <img src="/img/user.jpg" alt="${userName}" />
+                         <div class="about">
+                            <div class="name">${userName}</div>
+                            <div class="status"><i class="fa fa-circle online ${userColors[uId]}"></i> online</div>
+                         </div>
+                     </li>`;
+            }
+
+            if(html === ''){ return; }
+
+            if(clear != null && clear == true){
+                $('.users-list ul').html('').html(html);
+            }else{
+                $('.users-list ul').prepend(html);
+            }
+        }
+
+        // Display break line in message
+        function addBreakLine(str) {
+            str = str.replace(/\r?\n/g, '<br/>');
+            return str;
+        }
+
+        // Encode html
+        function encodeHTML(str) {
+            return $('<div />').text(str).html();
+        }
+
+        // Send button clicked
+        $('#message_send').on('click', function () {
+            var content = $('#message_content').val();
+            socket.emit('messages', content);
+            $('#message_content').val('');
+        });
+
+        // Update room
+        $('.public-btn').on('click', function () {
+            var $this = $(this);
+            var current = $this.data('value');
+
+            // Change to private
+            if(current){
+                if(confirm('チャットルームを非公開にしますか？')){
+                    socket.emit('updateRoom', 0);
+                }
+                // Change room to public
+            }else{
+                if(confirm('チャットルームを公開にしますか？')){
+                    socket.emit('updateRoom', 1);
+                }
+            }
+        });
+
+        // Get out of room
+        $('.escape-btn').on('click', function () {
+            if(confirm('チャットルームを退出しますか？')){
+                // Call API to remove session
+                $.get('/chat/left_room');
+
+                socket.emit('leftRoom', true);
+
+                window.location.href = '/';
+            }
+        });
+
+        // Like a message
+        $('body').on('click', '.like-icon', function () {
+            var $liTag = $(this).closest('li');
+            var message = $liTag.find('.message').text();
+
+            var homeSocket = io('/home', {transports: ['websocket']});
+            homeSocket.emit('addWitty', message);
+
+            // Remove like button
+            $liTag.find('.like-icon').remove();
+        });
+
+
+    </script>
+
+</body>
+</html>
