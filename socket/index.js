@@ -27,7 +27,7 @@ var ioEvents = function (io) {
         }
     };
     var namespaceList = {
-        "random": "ランダームチャット",
+        "random": "ランダムチャット",
         "mama": "ママチャット",
         "anything_talk": "とにかく話を聞いてほしい",
         "anything_listen": "とにかく話を聞いてあげたい",

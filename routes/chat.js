@@ -45,7 +45,7 @@ router.get('/view/:namespace', function (req, res, next) {
     var name = '';
     switch (namespace){
         case 'random':
-            name = 'ランダームチャット';
+            name = 'ランダムチャット';
             break;
         case 'mama':
             name = 'ママチャット';
