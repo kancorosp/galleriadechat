@@ -1,4 +1,3 @@
-
 /**
  * Created by leminhtoan on 2017/11/29.
  */
@@ -34,18 +33,22 @@ router.get('/anything_talk', function(req, res, next) {
 router.get('/bar_join', function(req, res, next) {
     res.render('chat/bar_join', { title: 'Chat bar' });
 });
+
+router.get('/bar_join_man', function(req, res, next) {
+    res.render('chat/bar_join_man', { title: 'Chat bar' });
+});
 // Bar chat room
 router.get('/bar_view', function(req, res, next) {
     res.render('chat/bar_view', { title: 'Chat bar' });
 });
 
 // View a public chat room
-router.get('/view/:namespace', function (req, res, next) {
+router.get('/view/:namespace', function(req, res, next) {
     var namespace = req.params.namespace;
     var name = '';
-    switch (namespace){
+    switch (namespace) {
         case 'random':
-            name = 'ランダムチャット';
+            name = 'ランダームチャット';
             break;
         case 'mama':
             name = 'ママチャット';
@@ -63,7 +66,7 @@ router.get('/view/:namespace', function (req, res, next) {
             name = 'Bar de 管理人';
             break;
     }
-    res.render('chat/view', { namespace:  namespace, name: name, roomId: req.query.roomId})
+    res.render('chat/view', { namespace: namespace, name: name, roomId: req.query.roomId })
 });
 
 //========== API ============//
@@ -73,18 +76,15 @@ router.post('/join_room', function(req, res, next) {
     // Update session
     req.session.roomId = req.body.roomId;
     req.session.userName = req.body.userName;
-
     res.json({ message: 'Success' });
 });
 
 // Remove session when left a room
 router.get('/left_room', function(req, res, next) {
     // Update session
-    if(req.session.roomId != null ) delete req.session.roomId;
-    if(req.session.userName != null ) delete req.session.userName;
-
+    if (req.session.roomId != null) delete req.session.roomId;
+    if (req.session.userName != null) delete req.session.userName;
     res.json({ message: 'Success' });
 });
-
 
 module.exports = router;

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[会話を楽しみたい人のためのチャットサービス] [Galleria de Chat ママ　おうちスナック]</title>
+    <!--<link rel="stylesheet" type="text/css" href="/css/bootstrap.css">-->
+    <link rel="stylesheet" type="text/css" href="/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="/css/animate.css">
+    <!-- <link rel="stylesheet" type="text/css" href="./animate.css"> -->
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../skippr_hina/css/skippr.css">
+    <link rel="stylesheet" type="text/css" href="../skippr_hina/css/style.css"> -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto">
+</head>
+
+<body>
+    <div class="wrap">
+        <header class="clearfix">
+            <div class="nav">
+                <div class="logo">
+                    <p class="Top"><a href="#top1">Galleria de Chat</a></p>
+                </div>
+                <!-- <div class="menu-icon"> -->
+                <i class="fa fa-bars fa-large sp" aria-hidden="true"></i>
+                <ul class="top-menu">
+                    <li class="top-menu-item do-chat"><a href="#do chat">チャットする</a>
+                        <ul class="sub-menu">
+                            <li class="sub-menu-item"><a href="/mamachat">ママチャット</a></li>
+                            <li class="sub-menu-item"><a href="/randomchat">ランダムチャット</a></li>
+                            <li class="sub-menu-item"><a href="/anythingchat">とにかく聞いてほしい/聞きたい</a></li>
+                            <li class="sub-menu-item"><a href="/chat/bar_join_man">Bar de 管理人</a></li>
+
+                        </ul>
+                    </li>
+                    <li class="top-menu-item"><a href="#see chat">チャットをみる</a></li>
+                    <li class="top-menu-item"><a href="#see words">名言をみる</a></li>
+                    <li class="top-menu-item"><a href="javascript:logout()">ログアウト</a></li>
+                </ul>
+            </div>
+        </header>
+    </div>
+
+    <div class="clearfix">
+        <div class="top-page">
+            <h1 class="top1" id="top1">Galleria de Chat</h1>
+            <h4 class="top2">出会った事のない誰かとの会話を楽しもう。</h4>
+            <p class="top3">Galleria de Chatは出会い系サイトではありません。会話を楽しみたい、誰かと共感したい人向けのチャットサービスです。<br> 酒場・スナックが好きだけど、子育て中で中々酒場に行けない管理人が、自宅でも似た雰囲気を楽しみたいと思って作ったサービスです。
+            </p>
+
+            <p class="choose-chat-bottom"><a href="#do chat">チャットを選ぶ</a></p>
+        </div>
+    </div>
+
+
+    <div class="clearfix">
+        <div class="do-chat-all">
+            <h1 id="do chat">チャットする</h1>
+            <div class="do chat_border border"></div>
+            <h4>galleriaとはイタリア語で屋根のついた商店街を意味します。<br>お気に入りのお店（チャットルーム）で楽しんでください。</h4>
+            <div class="container1">
+                <div class="box1 wow rubberBand">
+                    <p class="titlechat" id="mamachat">ママチャット</p>
+                    <i class="fa fa-comments fa-large" aria-hidden="true"></i>
+                    <p class="explaintext">ママ限定のチャットです。<br>ランダムに出会った３人の<br>ママとの会話が楽しめます。</p>
+                    <p class="chat-button1"><a href="/mamachat">チャットを開始する</a></p>
+                </div>
+
+                <div class="box2 wow rubberBand">
+                    <p class="titlechat" id="randomchat">ランダムチャット</p>
+                    <i class="fa fa-comments fa-large" aria-hidden="true"></i>
+                    <p class="explaintext">性別・年齢など限定しない、<br>ランダムに出会った３人での<br>会話が楽しめます。<br> 相手を不快にするような暴言、
+                        <br>セクハラ発言等は控えてください。</p>
+                    <p class="chat-button2"><a href="/randomchat">チャットを開始する</a></p>
+
+                </div>
+                <div class="box3 wow rubberBand">
+                    <p class="titlechat " id="anythingchat">とにかく話を聞いてほしい<br>/聞いてあげたい</p>
+                    <i class="fa fa-comments fa-large" aria-hidden="true"></i>
+                    <p class="explaintext">ランダムに選ばれた会員が<br>あなたの話を聞いて共感して<br>くれます。<br> また、余裕があるときには
+                        <br>誰かの話を聞いて力になれます。<br>一方的なストレス発散のための<br> 暴言、セクハラ発言等は
+                        <br>やめてください。</p>
+                    <p class="chat-button3"><a href="/anythingchat">チャットを開始する</a></p>
+                </div>
+                <div class="box4 wow rubberBand">
+                    <p class="titlechat" id="barchat">Bar de 管理人<br>毎晩22時〜24時営業</p>
+                    <i class="fa fa-comments fa-large" aria-hidden="true"></i>
+                    <p class="explaintext">管理人が気ままに話したり、<br>あなたの話を聞いたりします。<br> 入店は限定10名ですが、
+                        <br>観覧はどなたでも!<br><br>
+                    </p>
+                    <p class="chat-button4"><a href="/chat/bar_join_man">入店する</a></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="clearfix">
+        <h1 id="see chat">チャットを見る</h1>
+        <div class="Feature_border border room-list">
+            <p></p>
+        </div>
+        <h4>公開中のチャット一覧です。好きなチャットルームをみてみよう。</h4>
+        <p class="order">並び順：　新着順　チャットルーム別</p>
+    </div>
+
+    <div class="clearfix">
+        <h1 id="see words">よっ！名言一覧</h1>
+        <div class="Feature_border border witty-list">
+
+        </div>
+        <h4>チャット中に飛び出した名言一覧です。</h4>
+        <p class="order">並び順：　新着順　チャットルーム別</p>
+    </div>
+
+    <!--<footer class="footer">-->
+    <!--<small>@2017 WillTREE</small>-->
+    <!--</footer>-->
+    <%- include layout/footer.ejs %>
+
+        <script src="/js/wow.js"></script>
+        <script type="text/javascript" src="/js/jquery.js"></script>
+        <script src="/js/script.js"></script>
+        <script src="/js/socket.io.js"></script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115777593-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+
+            gtag('config', 'UA-115777593-1');
+        </script>
+
+        <script>
+            var socket = io('/manager', {
+                transports: ['websocket']
+            });
+
+            socket.on('connect', function(data) {
+
+            });
+
+            socket.on('init', function(id) {
+                if (id != 'BardeAdmin') {
+                    alert('管理人のページにアクセスするにはログインが必要です。');
+                    window.location.href = '/admin';
+                }
+            });
+
+            socket.on('barchatnotice', function(notice) {
+                $("#barchatText").text(notice);
+            });
+
+            socket.on('updateOpenRoomlist', function(data) {
+                socket.emit('updateOpenRooms', true);
+            });
+            socket.on('wittyMessages', function(wittyMessages) {
+                var $wittyList = $('.witty-list');
+                // Clear curren witty list
+                $wittyList.html('');
+                var index = 0;
+                wittyMessages.forEach(function(message) {
+                    $wittyList.append('<p >' + message + '&nbsp;&nbsp;&nbsp;<a id="Del_' + index + '" href="javascript:void(0)">デリート</a> </p>');
+                    $("#Del_" + index).on("click", function() {
+                        //$(this).closest("p").remove();
+                        socket.emit('removeWitty', message);
+                        //alert(index);
+                    });
+                    index++;
+                })
+            });
+            socket.on('openRooms', function(openRooms) {
+                console.log('open room');
+                console.log(openRooms);
+                var $roomList = $('.room-list');
+                // Clear curren witty list
+                $roomList.html('');
+                $.each(openRooms, function(namespace, rooms) {
+                    var name = '';
+                    switch (namespace) {
+                        case 'random':
+                            name = 'ランダームチャット';
+                            break;
+                        case 'mama':
+                            name = 'ママチャット';
+                            break;
+                        case 'anything_talk':
+                            name = 'とにかく話を聞いてほしい';
+                            break;
+                        case 'anything_listen':
+                            name = 'とにかく話を聞いてあげたい';
+                            break;
+                        case 'bar_join':
+                            name = 'Bar de 管理人';
+                            break;
+                        case 'bar_view':
+                            name = 'Bar de 管理人';
+                            break;
+
+                    }
+                    $.each(rooms, function(idx, room) {
+                        $roomList.append('<p>' + name + '<a href="/chat/view/' + namespace + '?roomId=' + room.id + '">参加</a></p>');
+                    })
+                })
+            });
+
+            function logout() {
+                socket.emit('barlogout', true);
+                window.location.href = '/';
+            }
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[会話を楽しみたい人のためのチャットサービス] [Galleria de Chat ママ　おうちスナック]</title>
+    <!--<link rel="stylesheet" type="text/css" href="/css/bootstrap.css">-->
+    <link rel="stylesheet" type="text/css" href="/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="/css/animate.css">
+    <!-- <link rel="stylesheet" type="text/css" href="./animate.css"> -->
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../skippr_hina/css/skippr.css">
+    <link rel="stylesheet" type="text/css" href="../skippr_hina/css/style.css"> -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto">
+</head>
+
+<body>
+    <div class="wrap">
+        <header class="clearfix">
+            <div class="nav">
+                <div class="logo">
+                    <p class="Top"><a href="#top1">Galleria de Chat</a></p>
+
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <div class="clearfix">
+        <div class="top-page">
+            <h1 class="top1" id="top1">Galleria de Chat</h1>
+            <h4 class="top2">出会った事のない誰かとの会話を楽しもう。</h4>
+            <p class="top3">Galleria de Chatは出会い系サイトではありません。会話を楽しみたい、誰かと共感したい人向けのチャットサービスです。<br> 酒場・スナックが好きだけど、子育て中で中々酒場に行けない管理人が、自宅でも似た雰囲気を楽しみたいと思って作ったサービスです。
+            </p>
+        </div>
+    </div>
+
+    <div class="dialog" id="admin-dlg" title="管理人 ログイン" style="display:none">
+        <!--<p class="validateTips">ニックネームを入力してください</p>-->
+        <form>
+            <div style="margin:20px 0 10px 0;">
+                <label for="admin-id">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ID&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <input type="text" name="admin-id" id="admin-id" placeholder="ID">
+            </div>
+            <div style="margin:10px 0 20px 0;">
+                <label for="admin-passwd">Password</label>
+                <input type="Password" name="admin-passwd" id="admin-passwd" placeholder="Password">
+            </div>
+            <div style="margin:20px 0 20px 0;">
+                <button id="admin-btn" style="padding:10px 20px 10px 20px"> Go </button>
+            </div>
+            <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        </form>
+    </div>
+
+    <!--<footer class="footer">-->
+    <!--<small>@2017 WillTREE</small>-->
+    <!--</footer>-->
+    <%- include layout/footer.ejs %>
+
+        <script src="/js/wow.js"></script>
+        <script src="/js/jquery.js"></script>
+        <script src="/js/jquery-ui.js"></script>
+        <script src="/js/script.js"></script>
+        <script src="/js/socket.io.js"></script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115777593-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+
+            gtag('config', 'UA-115777593-1');
+        </script>
+
+        <script>
+            var admindlg = $("#admin-dlg").dialog({
+                autoOpen: false,
+                modal: true,
+                height: 250,
+                width: 350,
+                close: function() {
+                    window.location.href = "/admin";
+                }
+            });
+
+            function adminlink() {
+                admindlg.dialog("open");
+            };
+
+            var adminbtn = $("#admin-btn").on('click', function(e) {
+                e.preventDefault();
+                admin_login();
+            });
+
+            var socket = io('/admin', {
+                transports: ['websocket']
+            });
+            socket.on('connect', function(data) {
+
+            });
+
+            socket.on('init', function(id) {
+                /*    if (id == 'Admin') {
+                        window.location.href = '/superman';
+                    } else if (id == 'BardeAdmin') {
+                        window.location.href = '/barman';
+                    } else {
+                        admindlg.dialog("open");
+                    }
+                */
+                admindlg.dialog("open");
+            });
+
+            // Admin login
+            function admin_login() {
+                var id = $('#admin-id').val();
+                var passwd = $('#admin-passwd').val();
+                socket.emit('admin_login', id, passwd);
+            };
+            socket.on('admin_state', function(state, msg) {
+                if (state) {
+                    admindlg.dialog("close");
+                    if (msg == 'super') {
+                        window.location.href = '/superman';
+                    } else if (msg == 'barde') {
+                        window.location.href = '/barman';
+                    }
+                } else {
+                    alert("ログインが正しくありません。");
+                    window.location.href = '/admin';
+                }
+            });
+        </script>
+</body>
+
+</html>

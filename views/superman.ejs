@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[会話を楽しみたい人のためのチャットサービス] [Galleria de Chat ママ　おうちスナック]</title>
+    <!--<link rel="stylesheet" type="text/css" href="/css/bootstrap.css">-->
+    <link rel="stylesheet" type="text/css" href="/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="/css/animate.css">
+    <!-- <link rel="stylesheet" type="text/css" href="./animate.css"> -->
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../skippr_hina/css/skippr.css">
+    <link rel="stylesheet" type="text/css" href="../skippr_hina/css/style.css"> -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto">
+</head>
+
+<body>
+    <div class="wrap">
+        <header class="clearfix">
+            <div class="nav">
+                <div class="logo">
+                    <p class="Top"><a href="#top1">Galleria de Chat</a></p>
+                </div>
+                <!-- <div class="menu-icon"> -->
+                <i class="fa fa-bars fa-large sp" aria-hidden="true"></i>
+                <ul class="top-menu">
+                    <li class="top-menu-item"><a href="javascript:setbarpasswd()">Bar de管理人の設定</a></li>
+                    <li class="top-menu-item do-chat"><a href="#">チャットする</a>
+                        <ul class="sub-menu">
+                            <li class="sub-menu-item"><a href="/mamachat">ママチャット</a></li>
+                            <li class="sub-menu-item"><a href="/randomchat">ランダムチャット</a></li>
+                            <li class="sub-menu-item"><a href="/anythingchat">とにかく聞いてほしい/聞きたい</a></li>
+                            <li class="sub-menu-item"><a href="/chat/bar_join_man">Bar de 管理人</a></li>
+                        </ul>
+                    </li>
+                    <li class="top-menu-item"><a href="#see words">名言をみる</a></li>
+                    <li class="top-menu-item"><a href="javascript:logout()">ログアウト</a></li>
+                    <!-- <li class="top-menu-item"><a href="#login">ログイン</a></li> -->
+                </ul>
+            </div>
+        </header>
+    </div>
+
+    <div class="clearfix">
+        <div class="top-page">
+            <h1 class="top1" id="top1">Galleria de Chat</h1>
+            <h4 class="top2">出会った事のない誰かとの会話を楽しもう。</h4>
+            <p class="top3">Galleria de Chatは出会い系サイトではありません。会話を楽しみたい、誰かと共感したい人向けのチャットサービスです。<br> 酒場・スナックが好きだけど、子育て中で中々酒場に行けない管理人が、自宅でも似た雰囲気を楽しみたいと思って作ったサービスです。
+            </p>
+        </div>
+    </div>
+
+    <div class="clearfix">
+        <div class="do-chat-all">
+            <h1 id="do chat">チャットルームのリスト</h1>
+            <div class="do chat_border border"></div>
+            <h4>現在進行中のチャットルームのリストです。</h4>
+            <div class="container-list">
+                <div class="listbox wow rubberBand">
+                    <div class="room-title">
+                        <p>ママチャット</p>
+                    </div>
+                    <div class="mama-rooms">
+                    </div>
+                </div>
+                <div class="listbox wow rubberBand">
+                    <div class="room-title">
+                        <p>ランダムチャット</p>
+                    </div>
+                    <div class="random-rooms">
+                    </div>
+                </div>
+                <div class="listbox wow rubberBand">
+                    <div class="room-title">
+                        <p style="line-height:30px;">とにかく話を聞いてほしい<br>/聞いてあげたい</p>
+                    </div>
+                    <div class="anything-rooms">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix">
+        <h1 id="see words">よっ！名言一覧</h1>
+        <div id="delfield" class="Feature_border border witty-list">
+
+        </div>
+        <h4>チャット中に飛び出した名言一覧です。</h4>
+        <p class="order">並び順：　新着順　チャットルーム別</p>
+    </div>
+
+    <div class="dialog" id="setbar-dlg" title="Bar de管理人の設定" style="display:none;">
+        <!--<p class="validateTips">ニックネームを入力してください</p>-->
+        <form>
+            <div style="margin:20px 0 10px 0;">
+                <label for="bar-id">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <input type="text" name="bar-id" id="bar-id" maxlength="40" size="15" placeholder="ID">
+            </div>
+            <div style="margin:10px 0 10px 0;">
+                <label for="bar-passwd">&nbsp;&nbsp;パスワード&nbsp;&nbsp;&nbsp;</label>
+                <input type="Password" name="bar-passwd" id="bar-passwd" maxlength="40" size="15" placeholder="Password">
+            </div>
+            <div style="margin:10px 0 10px 0;">
+                <label for="bar-confirmpasswd">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;確&nbsp;&nbsp;&nbsp;&nbsp;認&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                <input type="Password" name="bar-confirmpasswd" id="bar-confirmpasswd" maxlength="40" size="15" placeholder="Confirm Password">
+            </div>
+            <div style="margin:10px 0 10px 0;">
+                <label for="bar-passwd-term">&nbsp;デッドライン&nbsp;</label>
+                <input type="text" name="bar-passwd-term" id="bar-passwd-term" maxlength="40" size="15" placeholder="2018-04-30">
+            </div>
+            <div style="margin:20px 0 20px 0;">
+                <button id="setbar-btn" style="padding:10px 20px 10px 20px"> 設定 </button>
+            </div>
+            <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        </form>
+    </div>
+    <!--<footer class="footer">-->
+    <!--<small>@2017 WillTREE</small>-->
+    <!--</footer>-->
+    <%- include layout/footer.ejs %>
+
+        <script src="/js/wow.js"></script>
+        <script src="/js/jquery.js"></script>
+        <script src="/js/jquery-ui.js"></script>
+        <script src="/js/script.js"></script>
+        <script src="/js/socket.io.js"></script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115777593-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+
+            gtag('config', 'UA-115777593-1');
+        </script>
+
+        <script>
+            var setbardlg = $("#setbar-dlg").dialog({
+                autoOpen: false,
+                height: 330,
+                width: 400
+            });
+
+            function setbarpasswd() {
+                setbardlg.dialog("open");
+            };
+
+            var setbarbtn = $("#setbar-btn").on('click', function(e) {
+                e.preventDefault();
+                var id = $("#bar-id").val();
+                if (id == 'admin') {
+                    alert("このIDは使用できません。");
+                    return false;
+                }
+                var password = $("#bar-passwd").val();
+                var confirmPassword = $("#bar-confirmpasswd").val();
+                if (password != confirmPassword) {
+                    alert("パスワードが一致しません。");
+                    return false;
+                }
+                var date_regEx = /^\d{4}-\d{2}-\d{2}$/;
+                var dateString = $("#bar-passwd-term").val();
+                if (dateString.match(date_regEx) == null) {
+                    alert("デッドラインを正確に入力してください。");
+                    return false;
+                }
+                set_barpasswd();
+                return true;
+            });
+
+            var socket = io('/manager', {
+                transports: ['websocket']
+            });
+            socket.on('connect', function(data) {
+
+            });
+
+            socket.on('init', function(id) {
+                if (id != 'Admin') {
+                    alert('管理人のページにアクセスするにはログインが必要です。');
+                    window.location.href = '/admin';
+                }
+            });
+            // Set bar passwd
+            function set_barpasswd() {
+                var id = $("#bar-id").val();
+                var passwd = $('#bar-passwd').val();
+                var term = $('#bar-passwd-term').val();
+                socket.emit('set_barpasswd', id, passwd, term);
+            };
+            socket.on('setbar_state', function(state) {
+                if (state == "Success") {
+                    alert("Bar de 管理人のパスワードが正確に設定されました。");
+                    setbardlg.dialog("close");
+                } else {
+                    alert("Set Bar de Passwd Failed.");
+                }
+            });
+
+            socket.on('wittyMessages', function(wittyMessages) {
+                var $wittyList = $('.witty-list');
+                // Clear curren witty list
+                $wittyList.html('');
+                var index = 0;
+                wittyMessages.forEach(function(message) {
+                    $wittyList.append('<p >' + message + '&nbsp;&nbsp;&nbsp;<a id="Del_' + index + '" href="javascript:void(0)">デリート</a> </p>');
+                    $("#Del_" + index).on("click", function() {
+                        //$(this).closest("p").remove();
+                        socket.emit('removeWitty', message);
+                        //alert(index);
+                    });
+                    index++;
+                })
+            });
+
+            socket.on('updateRoomlist', function(data) {
+                socket.emit('updateRooms', true);
+            });
+            socket.on('getRooms', function(roomlist) {
+                console.log(roomlist);
+                var $mamarooms = $('.mama-rooms');
+                $mamarooms.html('');
+                var $randomrooms = $('.random-rooms');
+                $randomrooms.html('');
+                var $anythingrooms = $('.anything-rooms');
+                $anythingrooms.html('');
+                var roomNumber = 0;
+                var roomState = '';
+                $.each(roomlist, function(namespace, rooms) {
+                    var name = '';
+                    roomNumber = 0;
+                    switch (namespace) {
+                        case 'random':
+                            $.each(rooms, function(idx, room) {
+                                name = 'room';
+                                roomNumber++;
+                                roomState = (room.open) ? '(公開)' : '(非公開)';
+                                name = name + roomNumber + roomState;
+                                $randomrooms.append('<span class="room-name"><p><a href="/chat/view/' + namespace + '?roomId=' + room.id + '">' + name + '</a></p></span>');
+                            });
+                            break;
+                        case 'mama':
+                            $.each(rooms, function(idx, room) {
+                                name = 'room';
+                                roomNumber++;
+                                roomState = (room.open) ? '(公開)' : '(非公開)';
+                                name = name + roomNumber + roomState;
+                                $mamarooms.append('<span class="room-name"><p><a href="/chat/view/' + namespace + '?roomId=' + room.id + '">' + name + '</a></p></span>');
+                            });
+                            break;
+                        case 'anything_talk':
+                            $.each(rooms, function(idx, room) {
+                                name = 'room';
+                                roomNumber++;
+                                roomState = (room.open) ? '(公開)' : '(非公開)';
+                                name = name + roomNumber + roomState;
+                                $anythingrooms.append('<span class="room-name"><p><a href="/chat/view/' + namespace + '?roomId=' + room.id + '">' + name + '</a></p></span>');
+                            });
+                            break;
+
+                    }
+                })
+            });
+
+            function logout() {
+                socket.emit('adminlogout', true);
+                window.location.href = '/';
+            }
+        </script>
+</body>
+
+</html>

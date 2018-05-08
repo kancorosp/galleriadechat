@@ -1,10 +1,20 @@
-
+/*
 $('.do-chat').on('click',function(){
      $('.sub-menu').slideToggle();
 });
+*/
+$(".sub-menu").hide();
 
-$('.sp').on('click',function(){
-     $('.top-menu').slideToggle();
+$(".do-chat").hover(
+    function() {
+        $(".sub-menu").slideDown('medium')
+    },
+    function() {
+        $(".sub-menu").slideUp('medium');
+    });
+
+$('.sp').on('click', function() {
+    $('.top-menu').slideToggle();
 });
 
 new WOW().init();
