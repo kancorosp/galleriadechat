@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,67 +10,108 @@
     <link rel="stylesheet" type="text/css" href="/css/stylebarchat.css">
     <!-- <link rel="stylesheet" type="text/css" href="../skippr_hina/css/skippr.css">
     <link rel="stylesheet" type="text/css" href="../skippr_hina/css/style.css"> -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto" >
+    <link href="https://fonts.googleapis.com/css?family=Roboto">
 </head>
+
 <body>
-<div class="wrap">
-    <header class="clearfix">
-        <div class="nav">
-            <div class="logo">
-                <p class="Top"><a href="/">Galledia de Chat</a></p>
+    <div class="wrap">
+        <header class="clearfix">
+            <div class="nav">
+                <div class="logo">
+                    <p class="Top"><a href="/">Galledia de Chat</a></p>
+                </div>
+                <ul class="top-menu">
+                    <li class="top-menu-item"><a href="#login">ログイン</a></li>
+                    <li class="top-menu-item"><a href="#login">会員登録</a></li>
+                </ul>
             </div>
-            <ul class="top-menu">
-                <li class="top-menu-item"><a href="#login">ログイン</a></li>
-                <li class="top-menu-item"><a href="#login">会員登録</a></li>
-            </ul>
-        </div>
-    </header>
-</div>
-
-<div class="clearfix">
-    <div class="attention">
-        <h2 class="hajime">チャットを始める前に</h2>
-
-        <p class="description">
-            ・およそ毎晩（不定休）、22時頃〜24時頃までOPENします。<br>
-            ・管理人が好きに話したり、話を聞いたりする場所です。<br>
-            ・１０名まで入店して、会話に参加できます。<br>
-            ・観覧はどなたでも。<br>
-        </p>
-
-        <div class="chatstart">Bar de　管理人に、入店するor 覗いてみる
-            <!--<div class="chatstart-after">GO!</div>-->
-            <div class="chatstart-after1">
-                <a href="/chat/bar_join">入店する</a>
-            </div>
-            <div class="chatstart-after2">
-                <a href="/chat/bar_view">観覧する</a>
-            </div>
-        </div>
-
+        </header>
     </div>
 
-    <div class="chatimage">
-        <h1 class="top1">Bar de　管理人</h1>
-        <p  class="top2">
-            ・およそ毎晩（不定休）、22時頃〜24時頃までOPENします。<br>
-            ・管理人が好きに話したり、話を聞いたりする場所です。<br>
-            ・１０名まで入店して、会話に参加できます。<br>
-            ・観覧はどなたでも。<br>
-        </p>
+    <div class="clearfix">
+        <div class="attention">
+            <h2 class="hajime">チャットを始める前に</h2>
+
+            <p class="description">
+                ・およそ毎晩（不定休）、22時頃〜24時頃までOPENします。<br> ・管理人が好きに話したり、話を聞いたりする場所です。
+                <br> ・１０名まで入店して、会話に参加できます。
+                <br> ・観覧はどなたでも。
+                <br>
+            </p>
+
+            <div class="chatstart">Bar de　管理人に、入店するor 覗いてみる
+                <!--<div class="chatstart-after">GO!</div>-->
+                <div class="chatstart-after1">
+                    <a href="javascript:join_bar()">入店する</a>
+                </div>
+                <div class="chatstart-after2">
+                    <a href="javascript:view_bar()">観覧する</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="chatimage">
+            <h1 class="top1">Bar de　管理人</h1>
+            <p class="top2">
+                ・およそ毎晩（不定休）、22時頃〜24時頃までOPENします。<br> ・管理人が好きに話したり、話を聞いたりする場所です。
+                <br> ・8 名まで入店して、会話に参加できます。
+                <br> ・観覧はどなたでも。
+                <br>
+            </p>
+        </div>
     </div>
-</div>
-<footer class="footer">
-    <small>@2017 WillTREE</small>
-</footer>
-<script type="text/javascript" src="/js/jquery.js"></script>
-<!-- <script src="../js/wow.js"></script> -->
-<script>
-    $('.chatstart').hover(function(){
-        $('.chatstart-after1').stop().fadeToggle();
-        $('.chatstart-after2').stop().fadeToggle();
-    });
-</script>
+    <footer class="footer">
+        <small>@2017 WillTREE</small>
+    </footer>
+
+    <script src="/js/wow.js"></script>
+    <script src="/js/jquery.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/socket.io.js"></script>
+
+    <script>
+        $('.chatstart').hover(function() {
+            $('.chatstart-after1').stop().fadeToggle();
+            $('.chatstart-after2').stop().fadeToggle();
+        });
+
+        var socket = io('/bar_join', {
+            transports: ['websocket']
+        });
+        socket.on('connect', function(data) {
+
+        });
+
+        function join_bar() {
+            socket.emit('join_bar', true);
+        }
+        socket.on('barstate', function(roomstate, manstate) {
+            if (roomstate) {
+                if (manstate) {
+                    window.location.href = '/chat/bar_join';
+                } else {
+                    alert('満室ですので、観覧してください。');
+                    view_bar();
+                }
+            } else {
+                alert("現在管理人が不在のため、チャットルームは営業しておりません。\n またの機会のご来店お待ちしてください。");
+            }
+        })
+
+        function view_bar() {
+            socket.emit('view_bar', true);
+        }
+
+        socket.on('barroom', function(state, data) {
+            if (state) {
+                window.location.href = '/chat/view/bar_join?roomId=' + data.id;
+            } else {
+                alert("現在管理人が不在のため、チャットルームは営業しておりません。\n またの機会のご来店お待ちしてください。");
+            }
+        })
+    </script>
 
 </body>
+
 </html>
