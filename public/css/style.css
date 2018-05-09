@@ -367,13 +367,27 @@ p3{text-decoration: underline;}*/
      bottom: 0;
      /*width:100%;*/
  }
+
+ 
+
+
  
  small {
      text-align: center;
      vertical-align: middle;
      position: relative;
      top: 20px;
+     
  }
+
+ .linking a {
+    text-decoration: none;
+    color: white;
+ }
+
+ 
+
+
  
  @media (max-width: 768px) {
      .nav {
@@ -412,6 +426,9 @@ p3{text-decoration: underline;}*/
      }
      .top-page {
          height: 900px;
+     }
+
+
      }
      /*.border{ 
   margin:0px 0px 0px 40%; 

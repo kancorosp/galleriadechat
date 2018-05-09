@@ -589,3 +589,21 @@ li.color-8 {
     margin-left: 5px;
     font-size: 12px;
 }
+
+.linking a {
+    text-decoration: none;
+    color: white;
+ }
+
+@media (max-width: 768px) {
+    .users-list, .list, .controls{
+        width:30%;
+    }
+    .chat{
+        width:50%;
+    }
+
+    .footer{
+        display: none;
+    }
+}
