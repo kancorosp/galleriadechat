@@ -237,7 +237,7 @@
         // User request join chat
         function joinChat() {
             var userName = $('#user_name').val()
-            socket.emit('join', userName, roomType);
+            socket.emit('join', userName);//, roomType
             dialog.dialog("close");
         }
 
