@@ -7,6 +7,15 @@
 var app = require('../app');
 var debug = require('debug')('nodejs-socket-sample:server');
 var http = require('http');
+var mongoose = require('mongoose');
+// CONNECT TO MONGODB SERVER
+var db = mongoose.connection;
+db.on('error', console.error);
+db.once('open', function(){
+    // CONNECTED TO MONGODB SERVER
+    console.log("Connected to mongod server");
+});
+mongoose.connect('mongodb://127.0.01:27017/galleriadechat');
 
 /**
  * Get port from environment and store in Express.
@@ -43,7 +52,7 @@ var server = http.createServer(app);
 //      console.info('Client gone [id=${socket.id}]');
 //   })
 // });
-server = require('../socket')(server);
+require('../socket')(server);
 
 /**
  * Listen on provided port, on all network interfaces.

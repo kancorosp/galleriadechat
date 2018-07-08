@@ -15,6 +15,7 @@
     "express-session": "^1.14.0",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
+    "mongoose": "^5.2.1",
     "morgan": "~1.7.0",
     "redis": "^2.6.2",
     "serve-favicon": "~2.3.2",

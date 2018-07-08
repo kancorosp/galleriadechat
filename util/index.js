@@ -3,7 +3,7 @@
  */
 
 // Add length prototype to object
-Object.prototype.length =  Object.keys(this).length;
+// Object.prototype.length =  Object.keys(this).length;
 
 
 var util = {

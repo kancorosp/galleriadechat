@@ -9,6 +9,8 @@ var redis = require('redis').createClient;
 var adapter = require('socket.io-redis');
 const util = require('../util');
 
+var WittyMessage = require('../models/witty-message');
+
 var redis1 = require("redis");
 var client = redis1.createClient();
 client.on("error", function(err) {
@@ -318,15 +320,19 @@ var ioEvents = function(io) {
 
             });
             socket.on('addWitty', function(message) {
-                /*
-                var found = false;
-
-                found = $.each(wittyMessages, function(i, value){
-                    if (value === message){
-                        found = true;
-                        return;
-                    }
-                });*/
+                const userName = session.userName;
+                let witty = {
+                    roomType : namespace,
+                    content: message,
+                    date: Date.now(),
+                    username: userName
+                };
+                // save to mongodb
+                new WittyMessage(witty).save(function(err){
+                    if(err)
+                        console.log(err);
+                    console.log('witty saved to mongodb : '+witty);
+                });
                 var found = _.some(wittyMessages, function(value) {
                     return value === message;
                 });
