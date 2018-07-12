@@ -11,9 +11,14 @@
     <link rel="stylesheet" type="text/css" href="/css/animate.css">
     <!-- <link rel="stylesheet" type="text/css" href="./animate.css"> -->
     <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <!-- <link rel="stylesheet" type="text/css" href="/css/stylewitty.css"> -->
     <!-- <link rel="stylesheet" type="text/css" href="../skippr_hina/css/skippr.css">
     <link rel="stylesheet" type="text/css" href="../skippr_hina/css/style.css"> -->
     <link href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" type="text/css" href="/dhtmlxcalendar/fonts/font_roboto/roboto.css">
+	<link rel="stylesheet" type="text/css" href="/dhtmlxcalendar/dhtmlxcalendar.css">
+	<script src="/dhtmlxcalendar/dhtmlxcalendar.js"></script>
+
 </head>
 
 <body>
@@ -108,17 +113,33 @@
     </div>
 
     <div class="clearfix">
-        <h1 id="see words">よっ！名言一覧</h1>
-        <div class="Feature_border border witty-list">
-
+        <div class="title-place">
+            <h1 class="top1" id="top1">○年○月○日のよっ！名言一覧</h1>
+            <div class="Feature_border border"></div>
+            <h4>チャット中に飛び出した名言たちです。</h4>
+            <p class="order">並び順：　新着順　チャットルーム別</p>
         </div>
-        <h4>チャット中に飛び出した名言一覧です。</h4>
-        <p class="order">並び順：　新着順　チャットルーム別</p>
     </div>
-
+        　　　
+    <div class="witty-words">
+        <div class="arrow-l" >
+            <p class="yesterday">前日</p>
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+        </div>
+        <div class="witty-list">
+            <p> 名言のないよう/名前/チャット種類/発言時間</p>
+            <p> 名言の内容/名前/チャット種類/発言時間</p>
+            <p> 名言のないようリスト/名前/チャット種類/発言時間</p>
+        </div>
+        <div class="arrow-r">
+            <p class="yesterday">翌日</p><i class="fa fa-arrow-right" aria-hidden="true"></i>
+            <div id="calendarHere" style="position:relative;height:350px;"></div>
+        </div>
+    </div>
     <!--<footer class="footer">-->
     <!--<small>@2017 WillTREE</small>-->
     <!--</footer>-->
+
     <%- include layout/footer.ejs %>
 
         <script src="/js/wow.js"></script>
@@ -136,29 +157,64 @@
             gtag('js', new Date());
 
             gtag('config', 'UA-115777593-1');
-        </script>
 
+
+        </script>
+        <script>
+            var myCalendar = new dhtmlXCalendarObject("calendarHere");
+                myCalendar.setDate(new Date());
+                myCalendar.attachEvent("onClick", function(_date){
+                    console.log(_date + ' selected!!!');
+                    date = _date.toDateString();
+                    socket.emit('getWitties', date);
+                });
+                myCalendar.show();
+        </script>   
         <script>
             var socket = io('/home', {
                 transports: ['websocket']
             });
-            socket.on('connect', function(data) {
+            
+            var witties;
+            var date = new Date().toDateString();
 
+            socket.on('connect', function(data) {
+                console.log('emittet getWitties by now');
+                socket.emit('getWitties', date);
+            });
+
+            socket.on('addWitty', function(data){
+                console.log('new witty added!!' + data);
+            });
+
+            // show received witties
+            socket.on('witties', function(data){
+                console.log('getting witties...' + data);
+                if(data.date === date) {
+                    witties = data.witties;
+                    var $wittyList = $('.witty-list');
+                    // Clear curren witty list
+                    $wittyList.html('');
+                    witties.forEach(function(witty) {
+                        var wittyHtml = '<p>' + witty.content + ' / ' + witty.username + ' / ' + witty.roomType + ' / ' + witty.date + '</p>';
+                        $wittyList.append(wittyHtml);
+                    })
+                };
             });
 
             socket.on('updateOpenRoomlist', function(data) {
                 socket.emit('updateOpenRooms', true);
             });
 
-            socket.on('wittyMessages', function(wittyMessages) {
-                var $wittyList = $('.witty-list');
-                // Clear curren witty list
-                $wittyList.html('');
+            // socket.on('wittyMessages', function(wittyMessages) {
+            //     var $wittyList = $('.witty-list');
+            //     // Clear curren witty list
+            //     $wittyList.html('');
 
-                wittyMessages.forEach(function(message) {
-                    $wittyList.append('<p>' + message + '</p>');
-                })
-            });
+            //     wittyMessages.forEach(function(message) {
+            //         $wittyList.append('<p>' + message + '</p>');
+            //     })
+            // });
 
             socket.on('barchatnotice', function(notice) {
                 $("#barchatText").text(notice);

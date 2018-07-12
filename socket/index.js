@@ -9,7 +9,7 @@ var redis = require('redis').createClient;
 var adapter = require('socket.io-redis');
 const util = require('../util');
 
-var WittyMessage = require('../models/witty-message');
+var Message = require('../models/message');
 
 var redis1 = require("redis");
 var client = redis1.createClient();
@@ -65,10 +65,8 @@ var ioEvents = function(io) {
     var roomList = {}; // All random chatting rooms
     var waitingRoom = {}; // Waiting random room
     var wittyMessages = []; // Witty message list
+    var witties = []; // witty objects' list
 
-    // var namespace = [
-    //     "random", "mama"
-    // ];
     var initRoom = function() {
         return {
             id: util.random(16),
@@ -261,6 +259,7 @@ var ioEvents = function(io) {
                     socket.emit('updateUsersList', roomList[namespace][roomId], true);
                 }
             });
+
             // Left view-only mode
             socket.on('view-left', function(roomId) {
                 if (roomList[namespace][roomId] != null) {
@@ -319,33 +318,25 @@ var ioEvents = function(io) {
                 }
 
             });
-            socket.on('addWitty', function(message) {
-                const userName = session.userName;
-                let witty = {
-                    roomType : namespace,
-                    content: message,
-                    date: Date.now(),
-                    username: userName
-                };
+            socket.on('addWitty', function(id) {
+
                 // save to mongodb
-                new WittyMessage(witty).save(function(err){
+                Message.findByIdAndUpdate(id, { isWitty: true }, function(err, result){
                     if(err)
                         console.log(err);
-                    console.log('witty saved to mongodb : '+witty);
-                });
-                var found = _.some(wittyMessages, function(value) {
-                    return value === message;
-                });
-                if (!found) {
-                    wittyMessages.push(message);
 
-                    // Check max lenth
-                    if (wittyMessages.length > config.maxWittyMessages) {
-                        wittyMessages = wittyMessages.slice(wittyMessages.length - config.maxWittyMessages);
-                    }
-                    io.of('/home').emit('wittyMessages', wittyMessages);
-                    io.of('/manager').emit('wittyMessages', wittyMessages);
-                }
+                    result.isWitty = true;
+
+                    // inform to others
+                    io.of('/home').emit('addWitty', result);
+                    io.of('/manager').emit('addWitty', result);                                            
+                });
+
+                // var found = _.some(wittyMessages, function(value) {
+                //     return value === message;
+                // });
+                // if (!found) {
+
             });
 
             socket.on('forceUserExit', function(userId) {
@@ -399,9 +390,18 @@ var ioEvents = function(io) {
                         // Add message to history
                         roomList[namespace][roomId].histories.push(message);
 
-                        // Emit message to client
-                        socket.emit('broad', message);
-                        socket.broadcast.to(session.roomId).emit('broad', message);
+                        // save to mongodb
+                        new Message(message).save(function(err, message){
+                            if(err)
+                                console.log(err);
+                            console.log('message saved to mongodb : '+message);
+
+                            // Emit message to client
+                            socket.emit('broad', message);
+                            socket.broadcast.to(session.roomId).emit('broad', message);
+
+                        });
+
                     } else {
                         // Emit error
                         socket.emit('errorMessage', "Chat error");
@@ -481,10 +481,24 @@ var ioEvents = function(io) {
         var session = socket.request.session;
         session.adminID = "";
         session.save(function(error) {});
+
         // Send to all users
         socket.emit('barchatnotice', barchatnotice);
-        socket.emit('wittyMessages', wittyMessages);
         socket.emit('updateOpenRoomlist', true);
+        
+        // send witties to client
+        socket.on('getWitties', function(day){
+            console.log('date = ' + day);
+            var start = new Date(day);
+            var end = new Date(day);
+            end.setDate(end.getDate()+1);
+
+            console.log('start: '+ start +', end:'+end);
+            Message.find({"date": {"$gte": start, "$lt": end}}, function(err, result) {
+                socket.emit('witties', {date: day, witties: result});
+            });
+        });
+
         socket.on('updateOpenRooms', function(data) {
             let openRooms = {};
             _.forOwn(roomList, function(rooms, namespace) {
@@ -584,7 +598,7 @@ var ioEvents = function(io) {
             console.log(idx);
             wittyMessages = wittyMessages.filter(function(item) {
                 return item !== message;
-            })
+            });
             socket.emit('wittyMessages', wittyMessages);
             socket.broadcast.emit('wittyMessages', wittyMessages);
             io.of('/home').emit('wittyMessages', wittyMessages);
