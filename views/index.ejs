@@ -184,20 +184,58 @@
             var myCalendar = new dhtmlXCalendarObject("calendarHere");
                 myCalendar.setDate(new Date());
                 myCalendar.attachEvent("onClick", function(_date){
-                    console.log(_date + ' selected!!!');
                     dayChanged(_date);
                 });
-                myCalendar.show();            
-
+                myCalendar.hideTime();
+                // add once, make sure dhtmlxcalendar.js is loaded
+                dhtmlXCalendarObject.prototype.langData["ja"] = {
+                    // date format for inputs
+                    dateformat: "%d.%m.%Y",
+                    // header format
+                    hdrformat: "%Y年 %F",
+                    // full names of months
+                    monthesFNames: [
+                        "1月","2月","3月","4月","5月","6月",
+                        "7月","8月","9月","10月","11月","12月"
+                    ],
+                    // short names of months
+                    monthesSNames: [
+                        "1月","2月","3月","4月","5月","6月",
+                        "7月","8月","9月","10月","11月","12月"
+                    ],
+                    // full names of days
+                    daysFNames: [
+                        "日曜日","月曜日","火曜日","水曜日",
+                        "木曜日","金曜日","土曜日"
+                    ],
+                    // short names of days
+                    daysSNames: [
+                        "日","月","火","水",
+                        "木","金","土"
+                    ],
+                    // starting day of a week. Number from 1(Monday) to 7(Sunday)
+                    weekstart: 7, 
+                    // the title of the week number column
+                    weekname: "w",
+                    // name of the "Today" button
+                    today: "今日",
+                    // name of the "Clear" button
+                    clear: "Clear"
+                };
+                myCalendar.loadUserLanguage("ja");
+                myCalendar.show();
+                
             $('#prevLink').on('click', function(e) {
                 console.log('prev link clicked!');
-                dayChanged(prevDay(date));
+                date.setDate(date.getDate() - 1);
+                dayChanged(date);
                 e.preventDefault();
             });
 
             $('#nextLink').on('click', function(e) {
                 console.log('next link clicked!');
-                dayChanged(nextDay(date));
+                date.setDate(date.getDate() + 1);
+                dayChanged(date);
                 e.preventDefault();
             });
 
@@ -208,19 +246,6 @@
                 var dateJp = dateToFormatString(date, '%YYYY%年%M%月%D%日');
                 $wittyTop.text(dateJp + 'のよっ！名言一覧');
             }
-
-            function prevDay(_date) {
-                var prev = new Date(_date);
-                prev.setDate(prev.getDate() - 1);
-                return prev;
-            }
-
-            function nextDay(_date) {
-                var next = new Date(_date);
-                next.setDate(next.getDate() + 1);
-                return next;
-            }
-
             // events
             socket.on('connect', function(data) {
                 console.log('get witties of today!');
