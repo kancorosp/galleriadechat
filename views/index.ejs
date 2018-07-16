@@ -124,7 +124,7 @@
     <div class="witty-words">
         <div class="arrow-l" >
             <p class="yesterday">前日</p>
-            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            <i class="fa fa-arrow-left" aria-hidden="true" id="prevLink"></i>
         </div>
         <div class="witty-list">
             <p> 名言のないよう/名前/チャット種類/発言時間</p>
@@ -132,7 +132,7 @@
             <p> 名言のないようリスト/名前/チャット種類/発言時間</p>
         </div>
         <div class="arrow-r">
-            <p class="yesterday">翌日</p><i class="fa fa-arrow-right" aria-hidden="true"></i>
+            <p class="yesterday">翌日</p><a id="nextLink"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
             <div id="calendarHere" style="position:relative;height:350px;"></div>
         </div>
     </div>
@@ -165,17 +165,13 @@
         </script>
         <script>
 
-        </script>   
-        <script>
-
             var socket = io('/home', {
                 transports: ['websocket']
             });
            
             var witties;
             var date = new Date();
-            // var prev_day = 
-            // var next_day
+
             var namespaceList = {
                 "random": "ランダームチャット",
                 "mama": "ママチャット",
@@ -189,16 +185,40 @@
                 myCalendar.setDate(new Date());
                 myCalendar.attachEvent("onClick", function(_date){
                     console.log(_date + ' selected!!!');
-                    date = _date;
-                    dayChanged(date);
+                    dayChanged(_date);
                 });
                 myCalendar.show();            
 
-            function dayChanged(date) {
+            $('#prevLink').on('click', function(e) {
+                console.log('prev link clicked!');
+                dayChanged(prevDay(date));
+                e.preventDefault();
+            });
+
+            $('#nextLink').on('click', function(e) {
+                console.log('next link clicked!');
+                dayChanged(nextDay(date));
+                e.preventDefault();
+            });
+
+            function dayChanged(_date) {
+                date = _date;
                 socket.emit('getWitties', date.toDateString());
                 var $wittyTop = $('#witty-title');
                 var dateJp = dateToFormatString(date, '%YYYY%年%M%月%D%日');
                 $wittyTop.text(dateJp + 'のよっ！名言一覧');
+            }
+
+            function prevDay(_date) {
+                var prev = new Date(_date);
+                prev.setDate(prev.getDate() - 1);
+                return prev;
+            }
+
+            function nextDay(_date) {
+                var next = new Date(_date);
+                next.setDate(next.getDate() + 1);
+                return next;
             }
 
             // events
@@ -222,7 +242,7 @@
                     witties.forEach(function(witty) {
                         console.log(witty);
                         var dateJp = dateToFormatString(new Date(witty.date), '%YYYY%年%M%月%D%日');
-                        var wittyHtml = '<p>' + witty.content + ' / ' + witty.username + ' / ' + witty.roomType + ' / ' + dateJp + '</p>';
+                        var wittyHtml = '<p>' + witty.content + ' / ' + witty.username + ' / ' + namespaceList[witty.roomType] + ' / ' + dateJp + '</p>';
                         $wittyList.append(wittyHtml);
                     })
                 };
