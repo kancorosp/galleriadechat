@@ -382,6 +382,7 @@ var ioEvents = function(io) {
                         let message = {
                             userId: userId,
                             content: content,
+                            roomType: namespace,
                             date: Date.now(),
                             username: userName
                         };

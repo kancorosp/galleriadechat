@@ -114,7 +114,7 @@
 
     <div class="clearfix">
         <div class="title-place">
-            <h1 class="top1" id="top1">○年○月○日のよっ！名言一覧</h1>
+            <h1 class="top1" id="witty-title">○年○月○日のよっ！名言一覧</h1>
             <div class="Feature_border border"></div>
             <h4>チャット中に飛び出した名言たちです。</h4>
             <p class="order">並び順：　新着順　チャットルーム別</p>
@@ -146,8 +146,11 @@
         <script type="text/javascript" src="/js/jquery.js"></script>
         <script src="/js/script.js"></script>
         <script src="/js/socket.io.js"></script>
+        <script src="/js/date-to-format-string.js"></script>
+
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115777593-1"></script>
+
         <script>
             window.dataLayer = window.dataLayer || [];
 
@@ -161,26 +164,47 @@
 
         </script>
         <script>
+
+        </script>   
+        <script>
+
+            var socket = io('/home', {
+                transports: ['websocket']
+            });
+           
+            var witties;
+            var date = new Date();
+            // var prev_day = 
+            // var next_day
+            var namespaceList = {
+                "random": "ランダームチャット",
+                "mama": "ママチャット",
+                "anything_talk": "とにかく話を聞いてほしい",
+                "anything_listen": "とにかく話を聞いてあげたい",
+                "bar_join": "Bar de 管理人"
+                    /*"bar_view": "Bar de 管理人" */
+            };
+
             var myCalendar = new dhtmlXCalendarObject("calendarHere");
                 myCalendar.setDate(new Date());
                 myCalendar.attachEvent("onClick", function(_date){
                     console.log(_date + ' selected!!!');
-                    date = _date.toDateString();
-                    socket.emit('getWitties', date);
+                    date = _date;
+                    dayChanged(date);
                 });
-                myCalendar.show();
-        </script>   
-        <script>
-            var socket = io('/home', {
-                transports: ['websocket']
-            });
-            
-            var witties;
-            var date = new Date().toDateString();
+                myCalendar.show();            
 
+            function dayChanged(date) {
+                socket.emit('getWitties', date.toDateString());
+                var $wittyTop = $('#witty-title');
+                var dateJp = dateToFormatString(date, '%YYYY%年%M%月%D%日');
+                $wittyTop.text(dateJp + 'のよっ！名言一覧');
+            }
+
+            // events
             socket.on('connect', function(data) {
-                console.log('emittet getWitties by now');
-                socket.emit('getWitties', date);
+                console.log('get witties of today!');
+                dayChanged(date);
             });
 
             socket.on('addWitty', function(data){
@@ -190,13 +214,15 @@
             // show received witties
             socket.on('witties', function(data){
                 console.log('getting witties...' + data);
-                if(data.date === date) {
+                if(data.date === date.toDateString()) {
                     witties = data.witties;
                     var $wittyList = $('.witty-list');
-                    // Clear curren witty list
+                    // Clear current witty list
                     $wittyList.html('');
                     witties.forEach(function(witty) {
-                        var wittyHtml = '<p>' + witty.content + ' / ' + witty.username + ' / ' + witty.roomType + ' / ' + witty.date + '</p>';
+                        console.log(witty);
+                        var dateJp = dateToFormatString(new Date(witty.date), '%YYYY%年%M%月%D%日');
+                        var wittyHtml = '<p>' + witty.content + ' / ' + witty.username + ' / ' + witty.roomType + ' / ' + dateJp + '</p>';
                         $wittyList.append(wittyHtml);
                     })
                 };
@@ -205,16 +231,6 @@
             socket.on('updateOpenRoomlist', function(data) {
                 socket.emit('updateOpenRooms', true);
             });
-
-            // socket.on('wittyMessages', function(wittyMessages) {
-            //     var $wittyList = $('.witty-list');
-            //     // Clear curren witty list
-            //     $wittyList.html('');
-
-            //     wittyMessages.forEach(function(message) {
-            //         $wittyList.append('<p>' + message + '</p>');
-            //     })
-            // });
 
             socket.on('barchatnotice', function(notice) {
                 $("#barchatText").text(notice);
