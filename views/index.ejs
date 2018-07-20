@@ -121,10 +121,10 @@
         </div>
     </div>
         　　　
-    <div class="witty-words">
+    <div class="clearfix witty-words">
         <div class="arrow-l" >
             <p class="yesterday">前日</p>
-            <i class="fa fa-arrow-left" aria-hidden="true" id="prevLink"></i>
+            <i class="fa fa-2x fa-arrow-left" aria-hidden="true" id="prevLink"></i>
         </div>
         <div class="witty-list">
             <p> 名言のないよう/名前/チャット種類/発言時間</p>
@@ -132,8 +132,12 @@
             <p> 名言のないようリスト/名前/チャット種類/発言時間</p>
         </div>
         <div class="arrow-r">
-            <p class="yesterday">翌日</p><a id="nextLink"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-            <div id="calendarHere" style="position:relative;height:350px;"></div>
+            <div>
+                <p class="yesterday">翌日</p><a id="nextLink"><i class="fa fa-2x fa-arrow-right" aria-hidden="true"></i></a>
+            </div>
+            <br><br>
+            <div id="calendarHere" style="position:relative;height:350px;">
+            </div>
         </div>
     </div>
     <!--<footer class="footer">-->
@@ -228,6 +232,7 @@
             $('#prevLink').on('click', function(e) {
                 console.log('prev link clicked!');
                 date.setDate(date.getDate() - 1);
+                myCalendar.setDate(date);
                 dayChanged(date);
                 e.preventDefault();
             });
@@ -235,6 +240,7 @@
             $('#nextLink').on('click', function(e) {
                 console.log('next link clicked!');
                 date.setDate(date.getDate() + 1);
+                myCalendar.setDate(date);
                 dayChanged(date);
                 e.preventDefault();
             });
@@ -266,18 +272,23 @@
             socket.on('witties', function(data){
                 console.log('getting witties...');
                 console.log(data.witties);
+
                 if(data.date === date.toDateString()) {
-                    witties = data.witties;
                     var $wittyList = $('.witty-list');
+                    witties = data.witties;
                     // Clear current witty list
                     $wittyList.html('');
-                    witties.forEach(function(witty) {
-                        console.log(witty);
-                        var dateJp = dateToFormatString(new Date(witty.date), '%YYYY%年%M%月%D%日');
-                        var wittyHtml = '<p>' + witty.content + ' / ' + witty.username + ' / ' + namespaceList[witty.roomType] + ' / ' + dateJp + '</p>';
-                        $wittyList.append(wittyHtml);
-                    })
-                };
+                    if(witties.length) {
+                        witties.forEach(function(witty) {
+                            console.log(witty);
+                            var dateJp = dateToFormatString(new Date(witty.date), '%YYYY%年%M%月%D%日');
+                            var wittyHtml = '<p>' + witty.content + ' / ' + witty.username + ' / ' + namespaceList[witty.roomType] + ' / ' + dateJp + '</p>';
+                            $wittyList.append(wittyHtml);
+                        });
+                    } else {
+                        $wittyList.html('<p>&nbsp;</p>');
+                    }
+                }
             });
 
             socket.on('updateOpenRoomlist', function(data) {

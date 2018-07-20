@@ -367,7 +367,7 @@ p3{text-decoration: underline;}*/
    color: #FAFAFA;
    text-align: center;
    margin: 0px auto;
-   /*position:fixed;*/
+   /* position:fixed; */
    bottom: 0;
    /*width:100%;*/
  }
@@ -382,6 +382,29 @@ p3{text-decoration: underline;}*/
  .linking a {
    text-decoration: none;
    color: white;
+ }
+
+ .witty-words {
+   margin-left: 10%;
+   background-size: cover;
+   background-position: center;
+   background-repeat: no-repeat;
+ }
+
+ .witty-list {
+   float: left;
+   width: 70%;
+   text-align: center;
+ }
+
+ .arrow-l {
+   float: left;
+   width: 10%;
+ }
+
+ .arrow-r {
+   float: left;
+   width: 20%;
  }
 
  @media (max-width: 768px) {
@@ -422,10 +445,4 @@ p3{text-decoration: underline;}*/
    .top-page {
      height: 900px;
    }
-   /*.border{ 
-     margin:0px 0px 0px 40%; 
-    }*/
-
-
-}
-
+ }
