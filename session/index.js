@@ -3,18 +3,6 @@
  */
 'use strict';
 
-// var session = require('express-session');
-// var config = require('../config');
-//
-// var init = function () {
-//     return session({
-//         secret: config.sessionSecret,
-//         resave: false,
-//         unset: 'destroy',
-//         saveUninitialized: true
-//     });
-// };
-
 // Use Redis as session store (for multiple server instance)
 var session = require('express-session');
 var redis = require('redis');

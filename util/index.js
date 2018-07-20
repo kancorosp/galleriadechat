@@ -9,10 +9,10 @@
 var util = {
     random: function (length) {
         const crypto = require("crypto");
-
         return crypto.randomBytes(length).toString("hex");
     }
 };
+
 
 
 module.exports = util;

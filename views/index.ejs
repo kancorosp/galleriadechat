@@ -252,13 +252,20 @@
                 dayChanged(date);
             });
 
-            socket.on('addWitty', function(data){
-                console.log('new witty added!!' + data);
+            socket.on('addedWitty', function(data){
+                console.log('added witty! ' + date.toDateString());
+                dayChanged(date);
+            });
+
+            socket.on('removedWitty', function(data){
+                console.log('removed witty! ' + date.toDateString());
+                dayChanged(date);
             });
 
             // show received witties
             socket.on('witties', function(data){
-                console.log('getting witties...' + data);
+                console.log('getting witties...');
+                console.log(data.witties);
                 if(data.date === date.toDateString()) {
                     witties = data.witties;
                     var $wittyList = $('.witty-list');
@@ -285,31 +292,10 @@
                 console.log('open room');
                 console.log(openRooms);
                 var $roomList = $('.room-list');
-                // Clear curren witty list
+                // Clear current witty list
                 $roomList.html('');
                 $.each(openRooms, function(namespace, rooms) {
-                    var name = '';
-                    switch (namespace) {
-                        case 'random':
-                            name = 'ランダムチャット';
-                            break;
-                        case 'mama':
-                            name = 'ママチャット';
-                            break;
-                        case 'anything_talk':
-                            name = 'とにかく話を聞いてほしい';
-                            break;
-                        case 'anything_listen':
-                            name = 'とにかく話を聞いてあげたい';
-                            break;
-                        case 'bar_join':
-                            name = 'Bar de 管理人';
-                            break;
-                        case 'bar_view':
-                            name = 'Bar de 管理人';
-                            break;
-
-                    }
+                    var name = namespaceList[namespace];
                     $.each(rooms, function(idx, room) {
                         $roomList.append('<p>' + name + '<a href="/chat/view/' + namespace + '?roomId=' + room.id + '">参加</a></p>');
                     })

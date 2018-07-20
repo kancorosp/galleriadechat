@@ -143,12 +143,20 @@
             });
 
             socket.on('connect', function(data) {
+                socket.emit('getAllWitties');
+            });
 
+            socket.on('removedWitty', function(data) {
+                socket.emit('getAllWitties');
+            });
+
+            socket.on('addedWitty', function(data) {
+                socket.emit('getAllWitties');
             });
 
             socket.on('init', function(id) {
                 if (id != 'BardeAdmin') {
-                    alert('管理人のページにアクセスするにはログインが必要です。');
+                    alert('管理人のページはログインが必要です。');
                     window.location.href = '/admin';
                 }
             });
@@ -160,21 +168,29 @@
             socket.on('updateOpenRoomlist', function(data) {
                 socket.emit('updateOpenRooms', true);
             });
-            socket.on('wittyMessages', function(wittyMessages) {
+
+            // show received witties
+            socket.on('witties', function(data){
+                var witties = data.witties;
+                console.log('witties size: '+witties);
                 var $wittyList = $('.witty-list');
-                // Clear curren witty list
+                // Clear current witty list
                 $wittyList.html('');
-                var index = 0;
-                wittyMessages.forEach(function(message) {
-                    $wittyList.append('<p >' + message + '&nbsp;&nbsp;&nbsp;<a id="Del_' + index + '" href="javascript:void(0)">デリート</a> </p>');
-                    $("#Del_" + index).on("click", function() {
-                        //$(this).closest("p").remove();
-                        socket.emit('removeWitty', message);
-                        //alert(index);
+
+                if(witties) {
+                    witties.forEach(function(witty) {
+                        var wittyHtml = '<p>' + witty.content + '&nbsp;&nbsp;&nbsp;<a class="del_witty" _id="'+witty._id+'">削除</a></p>';
+                        $wittyList.append(wittyHtml);
                     });
-                    index++;
-                })
+                    $('.del_witty').on('click', function(e) {
+                        var id = $(this).attr('_id');
+                        console.log('id = '+id);
+                        socket.emit('removeWitty', id);
+                    });
+                }
+
             });
+            
             socket.on('openRooms', function(openRooms) {
                 console.log('open room');
                 console.log(openRooms);

@@ -108,7 +108,7 @@
                 <input type="Password" name="bar-confirmpasswd" id="bar-confirmpasswd" maxlength="40" size="15" placeholder="Confirm Password">
             </div>
             <div style="margin:10px 0 10px 0;">
-                <label for="bar-passwd-term">&nbsp;デッドライン&nbsp;</label>
+                <label for="bar-passwd-term">&nbsp;期間&nbsp;</label>
                 <input type="text" name="bar-passwd-term" id="bar-passwd-term" maxlength="40" size="15" placeholder="2018-04-30">
             </div>
             <div style="margin:20px 0 20px 0;">
@@ -167,7 +167,7 @@
                 var date_regEx = /^\d{4}-\d{2}-\d{2}$/;
                 var dateString = $("#bar-passwd-term").val();
                 if (dateString.match(date_regEx) == null) {
-                    alert("デッドラインを正確に入力してください。");
+                    alert("期間を正確に入力してください。");
                     return false;
                 }
                 set_barpasswd();
@@ -178,12 +178,20 @@
                 transports: ['websocket']
             });
             socket.on('connect', function(data) {
+                socket.emit('getAllWitties');
+            });
 
+            socket.on('removedWitty', function(data) {
+                socket.emit('getAllWitties');
+            });
+
+            socket.on('addedWitty', function(data) {
+                socket.emit('getAllWitties');
             });
 
             socket.on('init', function(id) {
                 if (id != 'Admin') {
-                    alert('管理人のページにアクセスするにはログインが必要です。');
+                    alert('管理人のページはログインが必要です。');
                     window.location.href = '/admin';
                 }
             });
@@ -196,32 +204,40 @@
             };
             socket.on('setbar_state', function(state) {
                 if (state == "Success") {
-                    alert("Bar de 管理人のパスワードが正確に設定されました。");
+                    alert("Bar de 管理人のパスワードが設定されました。");
                     setbardlg.dialog("close");
                 } else {
                     alert("Set Bar de Passwd Failed.");
                 }
             });
 
-            socket.on('wittyMessages', function(wittyMessages) {
+           
+            // show received witties
+            socket.on('witties', function(data){
+                var witties = data.witties;
+                console.log('witties size: '+witties);
                 var $wittyList = $('.witty-list');
-                // Clear curren witty list
+                // Clear current witty list
                 $wittyList.html('');
-                var index = 0;
-                wittyMessages.forEach(function(message) {
-                    $wittyList.append('<p >' + message + '&nbsp;&nbsp;&nbsp;<a id="Del_' + index + '" href="javascript:void(0)">デリート</a> </p>');
-                    $("#Del_" + index).on("click", function() {
-                        //$(this).closest("p").remove();
-                        socket.emit('removeWitty', message);
-                        //alert(index);
+
+                if(witties) {
+                    witties.forEach(function(witty) {
+                        var wittyHtml = '<p>' + witty.content + '&nbsp;&nbsp;&nbsp;<a class="del_witty" _id="'+witty._id+'">削除</a></p>';
+                        $wittyList.append(wittyHtml);
                     });
-                    index++;
-                })
+                    $('.del_witty').on('click', function(e) {
+                        var id = $(this).attr('_id');
+                        console.log('id = '+id);
+                        socket.emit('removeWitty', id);
+                    });
+                }
+
             });
 
             socket.on('updateRoomlist', function(data) {
                 socket.emit('updateRooms', true);
             });
+
             socket.on('getRooms', function(roomlist) {
                 console.log(roomlist);
                 var $mamarooms = $('.mama-rooms');

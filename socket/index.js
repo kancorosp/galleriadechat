@@ -65,7 +65,6 @@ var ioEvents = function(io) {
     var roomList = {}; // All random chatting rooms
     var waitingRoom = {}; // Waiting random room
     var wittyMessages = []; // Witty message list
-    var witties = []; // witty objects' list
 
     var initRoom = function() {
         return {
@@ -328,8 +327,8 @@ var ioEvents = function(io) {
                     result.isWitty = true;
 
                     // inform to others
-                    io.of('/home').emit('addWitty', result);
-                    io.of('/manager').emit('addWitty', result);                                            
+                    io.of('/home').emit('addedWitty', result);
+                    io.of('/manager').emit('addedWitty', result);                                           
                 });
 
                 // var found = _.some(wittyMessages, function(value) {
@@ -383,6 +382,7 @@ var ioEvents = function(io) {
                             userId: userId,
                             content: content,
                             roomType: namespace,
+                            roomId: roomId,
                             date: Date.now(),
                             username: userName
                         };
@@ -495,7 +495,7 @@ var ioEvents = function(io) {
             end.setDate(end.getDate()+1);
 
             console.log('start: '+ start +', end:'+end);
-            Message.find({"date": {"$gte": start, "$lt": end}}, function(err, result) {
+            Message.find({isWitty: true, date: {"$gte": start, "$lt": end}}, function(err, result) {
                 socket.emit('witties', {date: day, witties: result});
             });
         });
@@ -526,7 +526,10 @@ var ioEvents = function(io) {
             var today = new Date();
             if (id == SuperAdminID && passwd == SuperAdminPassword) {
                 session.adminID = "Admin";
-                session.save(function(err) {});
+                session.save(function(err) {
+                    if(err)
+                     console.log('Save to session failed! ' + err);
+                });
                 socket.emit('admin_state', true, 'super');
             } else if (id == BardeAdminID && passwd == BardeAdminPassword && DateCompare(BardeAdminDeadline, today)) {
                 session.adminID = "BardeAdmin";
@@ -555,9 +558,18 @@ var ioEvents = function(io) {
         socket.emit('init', session.adminID);
 
         // Send to all users
-        socket.emit('wittyMessages', wittyMessages);
+        // socket.emit('wittyMessages', wittyMessages);
         socket.emit('updateOpenRoomlist', true);
         socket.emit('updateRoomlist', true);
+
+        // send witties to client
+        socket.on('getAllWitties', function(){
+            Message.find({isWitty: true}, function(err, result) {
+                if(err)
+                    console.log(err);
+                socket.emit('witties', {witties: result});
+            });
+        });
 
         socket.on('barlogout', function(data) {
             session.adminID = '';
@@ -568,6 +580,7 @@ var ioEvents = function(io) {
             session.adminID = '';
             session.save(function(err) {});
         });
+
         socket.on('updateOpenRooms', function(data) {
             let openRooms = {};
             _.forOwn(roomList, function(rooms, namespace) {
@@ -580,6 +593,7 @@ var ioEvents = function(io) {
             });
             socket.emit('openRooms', openRooms);
         });
+        
         socket.on('updateRooms', function(data) {
             if (roomList) {
                 let currRooms = {};
@@ -593,16 +607,21 @@ var ioEvents = function(io) {
             }
         });
 
-        socket.on('removeWitty', function(message) {
-            const idx = wittyMessages.indexOf(message);
-            console.log('to be removed message=' + message);
-            console.log(idx);
-            wittyMessages = wittyMessages.filter(function(item) {
-                return item !== message;
-            });
-            socket.emit('wittyMessages', wittyMessages);
-            socket.broadcast.emit('wittyMessages', wittyMessages);
-            io.of('/home').emit('wittyMessages', wittyMessages);
+        socket.on('removeWitty', function(id){
+                // save to mongodb
+                Message.findByIdAndUpdate(id, { isWitty: false }, function(err, result){
+                    if(err)
+                        console.log(err);
+
+                    result.isWitty = false;
+                    
+                    // inform others to refresh witties
+                    io.of('/home').emit('removedWitty');
+                    io.of('/manager').emit('removedWitty');
+                    socket.emit('removedWitty');
+                    socket.broadcast.emit('removedWitty');
+
+                });            
         });
 
         //Set bar passwd 
@@ -640,14 +659,17 @@ var init = function(server) {
     // Force Socket io use web socket only
     io.set('transports', ['websocket']);
 
-    let port = config.redis.port;
-    let host = config.redis.host;
-    let password = config.redis.password;
 
-    // Create subscriber and publisher Redis client
-    let subClient = redis(port, host, { auth_pass: password });
-    let pubClient = redis(port, host, { auth_pass: password, return_buffers: true, });
-    io.adapter(adapter({ subClient, pubClient }));
+    ///////////////////// commented, it will only use for multiple servers
+    // let port = config.redis.port;
+    // let host = config.redis.host;
+    // let password = config.redis.password;
+
+    // // Create subscriber and publisher Redis client
+    // let subClient = redis(port, host, { auth_pass: password });
+    // let pubClient = redis(port, host, { auth_pass: password, return_buffers: true, });
+    // io.adapter(adapter({ subClient, pubClient }));
+    /////////////////////////////////////
 
     // Allow socket use session
     io.use((socket, next) => {
