@@ -281,7 +281,7 @@
                     if(witties.length) {
                         witties.forEach(function(witty) {
                             console.log(witty);
-                            var dateJp = dateToFormatString(new Date(witty.date), '%YYYY%年%M%月%D%日');
+                            var dateJp = dateToFormatString(new Date(witty.date), '%H%:%m%');
                             var wittyHtml = '<p>' + witty.content + ' / ' + witty.username + ' / ' + namespaceList[witty.roomType] + ' / ' + dateJp + '</p>';
                             $wittyList.append(wittyHtml);
                         });
