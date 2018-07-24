@@ -373,9 +373,9 @@ var ioEvents = function(io) {
 
                 // Check roomId
                 if (!content || !content.trim()) {
-                    socket.emit('errorMessage', "Blank message error");
+                    socket.emit('errorMessage', "メッセージが正しくありません");
                 } else if (session.roomId == null) {
-                    socket.emit('errorMessage', "Chat error");
+                    socket.emit('errorMessage', "ルームが正しくありません");
                 } else {
                     var roomId = session.roomId;
                     if (roomList[namespace][roomId] != null) {
@@ -407,7 +407,7 @@ var ioEvents = function(io) {
 
                     } else {
                         // Emit error
-                        socket.emit('errorMessage', "Chat error");
+                        socket.emit('errorMessage', "3人のメンバーが集まるまで、もう少々お待ちください。");
                     }
                 }
             });

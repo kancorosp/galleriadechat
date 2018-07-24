@@ -30,7 +30,7 @@ var app = {
         });
 
         socket.on('errorMessage', function (data) {
-            alert('3人のメンバーが集まるまで、もう少々お待ちください。');
+            alert(data);
         });
 
         socket.on('removeRoom', function (data) {

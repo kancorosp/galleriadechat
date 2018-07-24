@@ -172,7 +172,7 @@
         });
 
         socket.on('errorMessage', function(data) {
-            alert('8人のメンバーが集まるまで、もう少々お待ちください。');
+            alert(data);
         });
 
         socket.on('removeRoom', function(data) {
