@@ -372,7 +372,9 @@ var ioEvents = function(io) {
                 let userId = session.id;
 
                 // Check roomId
-                if (session.roomId == null) {
+                if (!content || !content.trim()) {
+                    socket.emit('errorMessage', "Blank message error");
+                } else if (session.roomId == null) {
                     socket.emit('errorMessage', "Chat error");
                 } else {
                     var roomId = session.roomId;
