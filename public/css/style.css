@@ -397,6 +397,20 @@ p3{text-decoration: underline;}*/
    text-align: center;
  }
 
+ .all-witty-list {
+    width: 70%;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .del_witty {
+    cursor: pointer;
+  }
+  
+  #prevLink, #nextLink {
+    cursor: pointer;
+  }
+
  .arrow-l {
    float: left;
    width: 10%;

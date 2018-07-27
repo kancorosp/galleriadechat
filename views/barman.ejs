@@ -107,11 +107,13 @@
     </div>
 
     <div class="clearfix">
-        <h1 id="see words">よっ！名言一覧</h1>
-        <div class="Feature_border border witty-list">
+        <h1 id="witty-title">よっ！名言一覧</h1>
+        <div id="delfield" class="Feature_border border">
 
         </div>
         <h4>チャット中に飛び出した名言一覧です。</h4>
+        <div class="all-witty-list">
+        </div>
         <!-- <p class="order">並び順：　新着順　チャットルーム別</p> -->
     </div>
 
@@ -173,7 +175,7 @@
             socket.on('witties', function(data){
                 var witties = data.witties;
                 console.log('witties size: '+witties);
-                var $wittyList = $('.witty-list');
+                var $wittyList = $('.all-witty-list');
                 // Clear current witty list
                 $wittyList.html('');
 
