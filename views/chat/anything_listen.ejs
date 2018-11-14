@@ -243,7 +243,7 @@
                       <span class="message-data-time">${message.date}</span>
                       <span class="pull-right"><span class="small-text">よっ名言!</span><i class="fa fa-lg fa-thumbs-up like-icon"></i></span>
                     </div>
-                    <span class="message my-message ${userColors[message.userId]}" dir="auto">${message.content}</span>
+                    <span class="message my-message ${userColors[message.userId]}"  _id="${message._id}" dir="auto">${message.content}</span>
                   </li>`;
             $(html).hide().appendTo('.chat-history ul').slideDown(200);
 
@@ -351,8 +351,11 @@
         // Like a message
         $('body').on('click', '.like-icon', function() {
             var $liTag = $(this).closest('li');
-            var message = $liTag.find('.message').text();
-            socket.emit('addWitty', message);
+            var message = $liTag.find('.message');
+            var content = message.text();
+            var id = message.attr('_id');
+
+            socket.emit('addWitty', id);
             $liTag.find('.like-icon').remove();
         });
     </script>
