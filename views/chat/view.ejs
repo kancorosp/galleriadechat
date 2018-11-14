@@ -177,7 +177,7 @@
                       <span class="message-data-time">${message.date}</span>
                       <span class="pull-right"><span class="small-text">よっ名言!</span><i class="fa fa-lg fa-thumbs-up like-icon"></i></span>
                     </div>
-                    <span class="message my-message ${userColors[message.userId]}" dir="auto">${message.content}</span>
+                    <span class="message my-message ${userColors[message.userId]}" _id="${message._id}" dir="auto">${message.content}</span>
                   </li>`;
             if (slidestate == true) {
                 $(html).hide().appendTo('.chat-history ul').slideDown(200);

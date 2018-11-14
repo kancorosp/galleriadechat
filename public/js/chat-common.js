@@ -118,7 +118,7 @@ var app = {
                       <span class="message-data-time">${message.date}</span>
                       <i class="fa fa-lg fa-thumbs-up like-icon"></i>
                     </div>
-                    <span class="message my-message ${userColors[message.userId]}" dir="auto">${message.content}</span>
+                    <span class="message my-message ${userColors[message.userId]}" _id="${message._id}" dir="auto">${message.content}</span>
                   </li>`;
             $(html).hide().appendTo('.chat-history ul').slideDown(200);
 
@@ -231,12 +231,11 @@ var app = {
         // Like a message
         $('body').on('click', '.like-icon', function () {
             var $liTag = $(this).closest('li');
-            var message = $liTag.find('.message').text();
+            var message = $liTag.find('.message');
+            var content = message.text();
+            var id = message.attr('_id');
 
-            var homeSocket = io('/home', {transports: ['websocket']});
-            homeSocket.emit('addWitty', message);
-
-            // Remove like button
+            socket.emit('addWitty', id);
             $liTag.find('.like-icon').remove();
         })
 
