@@ -34,4 +34,14 @@ router.get('/barchat', function(req, res, next) {
     res.render('barchat', { title: 'Bar de 管理人' });
 });
 
+router.get('/contact', function(req, res, next) {
+    res.render('contact', { title: 'お問い合わせ' });
+});
+
+router.post('contact_after', function(req, res, next) {
+    // send mail using AWS SES
+
+    res.render('contact_after', { title: 'お問い合わせ' });
+});
+
 module.exports = router;
