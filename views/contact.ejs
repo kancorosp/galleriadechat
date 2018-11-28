@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <link rel="stylesheet" type="text/css" href="/font-awesome-4.7.0/css/font-awesome.css">
+    <!-- <link rel="stylesheet" type="text/css" href="./animate.css"> -->
+    <link rel="stylesheet" type="text/css" href="contact.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../skippr_hina/css/skippr.css">
+    <link rel="stylesheet" type="text/css" href="../skippr_hina/css/style.css"> -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto" >
+</head>
+<body>
+<div class="wrap">
+    <header class="clearfix">
+        <div class="nav">
+            <div class="logo">
+                <p class="Top"><a href="/">Galledia de Chat</a></p>
+            </div>
+            <!-- <ul class="top-menu">
+                <li class="top-menu-item"><a href="#login">ログイン</a></li>
+                <li class="top-menu-item"><a href="#login">会員登録</a></li>
+            </ul> -->
+        </div>
+    </header>
+</div>
+
+
+<section class="section">
+    <h1><span class="content">お問い合わせありがとうございます！！</span></h1>
+    <br><br>
+    <p class="message">Galleria de Chatをご利用いただき、ありがとうございます。<br><br>
+       サービスに対するお問い合わせ・感想・提案などお気軽にお問い合わせください。<br>いたずら目的のメッセージを除き、基本的に頂いたメッセージに関して全てに返信させて頂く予定ですが、<br>返信まで2-3営業日の猶予をいただきたく、ご理解の程、宜しくお願い申し上げます。<br><br> Galleria de Chat管理人パッパラ
+    </p>
+       
+    <div class = "contactform">
+    <br><br><p>以下、必要項目にご記入の上、送信ボタンを押してください。
+    <form action="/contact_after" method="POST" class="content form contactForm">
+        <dl><br>
+            
+            <dt>お名前 (必須)</dt>
+            <dd><input type="text" name="name" required></dd><br>
+            <dt>メールアドレス (必須)</dt>
+            <dd><input type="email" name="mail" required></dd><br>
+            <dt>お問い合わせ内容・メッセージ</dt>
+            <dd><textarea name="message" required></textarea></dd><br>
+        </dl>
+        <div class="btnWrap">
+            <button type="submit" class="button">送信</button>
+        </div>
+    </form>
+    <div>
+</section>
+
+</body>
+</html>
